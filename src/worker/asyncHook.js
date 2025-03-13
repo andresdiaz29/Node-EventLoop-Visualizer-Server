@@ -6,7 +6,7 @@ function debug(...args) {
 }
 const asyncIdToResource = {};
 const init = (asyncId, type, triggerAsyncId, resource) => {
-  debug(`asyncId:${asyncId}, type:${type}, taid:${triggerAsyncId}, resource:`,resource);
+  // debug(`asyncId:${asyncId}, type:${type}, taid:${triggerAsyncId}, resource:`,resource);
   asyncIdToResource[asyncId] = resource;
   if (type === 'PROMISE') {
     postEvent(Events.InitPromise(asyncId, triggerAsyncId));
@@ -22,7 +22,7 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
   }
   if (type === 'Microtask') {
     const callbackName = resource.callback?.name || 'anonymous';
-    debug('Microtask: ', resource);
+    // debug('Microtask: ', resource);
     postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
   }
   if (
@@ -38,7 +38,7 @@ const init = (asyncId, type, triggerAsyncId, resource) => {
     resource.callback.name !== 'resume_'
   ) {
     const callbackName = resource?.callback?.name || 'microtask';
-    debug(callbackName);
+    // debug(callbackName);
     postEvent(Events.InitMicrotask(asyncId, triggerAsyncId, callbackName));
   }
 };

@@ -55,7 +55,14 @@ const Events = {
 let events = [];
 const postEvent = (event) => {
   events.push(event);
-  parentPort.postMessage(JSON.stringify(event));
+
+  const { type, payload, message } = event;
+
+  if (payload?.message) {
+    console.log(`[event] Type: '${type}', Message: '${payload?.message?.trim()?.replace(/\n/g, '')}'`);
+  } else {
+    console.log(`[event] Type: '${type}', FuncID: '${payload?.funcID}', Name: '${payload?.name}', Start: '${payload?.start}', End: '${payload?.end}'`);
+  }
 };
 
 const Tracer = {

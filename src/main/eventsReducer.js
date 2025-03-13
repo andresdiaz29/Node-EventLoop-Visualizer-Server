@@ -120,7 +120,7 @@ const reduceEvents = (events) => {
   // A Microtask was enqueued when its parent resolved iff the child Promise
   // of the parent had its callback invoked.
   //
-  // A Promise has its callback invoked iff a function was entered immediately
+  // A Promise has its callback invoked if a function was entered immediately
   // after the Promise's `BeforePromise` event.
 
   const resolvedPromiseIds = events
@@ -200,7 +200,7 @@ const reduceEvents = (events) => {
     })
   );
 
-  console.log({
+  /*console.log({
     resolvedPromiseIds,
     promisesWithInvokedCallbacksInfo,
     parentsIdsOfPromisesWithInvokedCallbacks,
@@ -208,7 +208,7 @@ const reduceEvents = (events) => {
     microtasksWithInvokedCallbacksInfo,
     microtaskChildIdToParentId,
     parentsIdsOfMicrotasks,
-  });
+  });*/
 
   return events.reduce(eventsReducer, {
     events: [],
