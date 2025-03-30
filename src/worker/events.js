@@ -19,8 +19,8 @@ const Events = {
   ErrorFunction: (message, funcID, name, start, end) =>
     event('ErrorFunction', { message, funcID, name, start, end }),
 
-  InitPromise: (asyncID, parentId) =>
-    event('InitPromise', { asyncID, parentId }),
+  InitPromise: (asyncID, parentId, name) =>
+    event('InitPromise', { asyncID, parentId, name }),
   ResolvePromise: (asyncID) => event('ResolvePromise', { asyncID }),
   BeforePromise: (asyncID) => event('BeforePromise', { asyncID }),
   AfterPromise: (asyncID) => event('AfterPromise', { asyncID }),
@@ -35,9 +35,19 @@ const Events = {
   },
   AfterMicrotask: (asyncID) => event('AfterMicrotask', { asyncID }),
 
+  InitTicktask: (asyncID, parentId, name) =>
+    event('InitTicktask', { asyncID, parentId, name }),
+  BeforeTicktask: (asyncID, name) => {
+    return event('BeforeTicktask', { asyncID, name });
+  },
+  AfterTicktask: (asyncID) => event('AfterTicktask', { asyncID }),
+
   InitTimeout: (asyncID, name, idleTimeout) =>
     event('InitTimeout', { asyncID, name, idleTimeout }),
   BeforeTimeout: (asyncID, name) => event('BeforeTimeout', { asyncID, name }),
+
+  BeforeMacrotask: (asyncID, name) => event('BeforeMacrotask', { asyncID, name }),
+  AfterMacrotask: (asyncID, name) => event('AfterMacrotask', { asyncID, name }),
 
   InitImmediate: (asyncID, name) => event('InitImmediate', { asyncID, name }),
   BeforeImmediate: (asyncID, name) =>
@@ -55,7 +65,14 @@ const Events = {
 let events = [];
 const postEvent = (event) => {
   events.push(event);
-  parentPort.postMessage(JSON.stringify(event));
+
+  const { type, payload, message } = event;
+
+  if (payload?.message) {
+    console.log(`[event] Type: '${type}', Message: '${payload?.message?.trim()?.replace(/\n/g, '')}'`);
+  } else {
+    console.log(`[event] Type: '${type}', FuncID: '${payload?.funcID}', Name: '${payload?.name}', Start: '${payload?.start}', End: '${payload?.end}'`);
+  }
 };
 
 const Tracer = {
