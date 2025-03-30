@@ -144,15 +144,11 @@ async function main2() {
 }
 
 main2();
-```
 
-
-PENDIENTES POR PROBAR
-```
 on('close', () => {});
 crypto
 http      
-fetch          
+fetch   
 ```
 
 ### Not working
