@@ -1,6 +1,8 @@
 const { parentPort, workerData } = require("worker_threads");
 const asyncHooks = require("async_hooks");
-const fs = require("fs");
+const fs = require("node:fs");
+const net = require('net');
+const crypto = require('crypto');
 const babel = require("@babel/core");
 const traverse = require("@babel/traverse").default;
 const parser = require("@babel/parser");
@@ -43,28 +45,6 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-/*const vm = new VM({
-  timeout: 6000,
-  sandbox: {
-    nextId,
-    Tracer,
-    fetch,
-    _,
-    lodash: _,
-    setTimeout,
-    setImmediate,
-    process: {
-      nextTick: process.nextTick,
-    },
-    queueMicrotask,
-    console: {
-      log: Tracer.log,
-      warn: Tracer.warn,
-      error: Tracer.error,
-    },
-  },
-});*/
-
 const context = {
   nextId,
   Tracer,
@@ -74,10 +54,18 @@ const context = {
     error: Tracer.error,
   },
   setTimeout,
+  setInterval,
+  clearInterval,
   setImmediate,
+  queueMicrotask,
+  __filename,
+  fs: {
+    readFile: fs.readFile
+  },
   process: {
     nextTick: process.nextTick,
   },
+  fetch,
 };
 
 const code = process.argv.slice(2)?.[0];
@@ -110,13 +98,6 @@ let modifiedSource = babel.transformSync(jsSourceCode.toString(), {
   ],
 }).code;
 
-modifiedSource = `
-Tracer.enterFunc(nextId(), "main", 0, 0);
-${modifiedSource}
-Tracer.exitFunc(nextId(), "main", 0, 0)
-`;
-
 const script = new vm.Script(modifiedSource);
 vm.createContext(context);
 script.runInContext(context);
-// vm.run(modifiedSource);
