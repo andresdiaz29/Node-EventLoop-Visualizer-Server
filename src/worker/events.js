@@ -1,4 +1,3 @@
-const { parentPort } = require('worker_threads');
 const prettyFormat = require('pretty-format');
 const _ = require('lodash');
 const event = (type, payload) => ({ type, payload });

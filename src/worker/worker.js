@@ -1,8 +1,6 @@
-const { parentPort, workerData } = require("worker_threads");
-const asyncHooks = require("async_hooks");
+const asyncHooks = require("node:async_hooks");
 const fs = require("node:fs");
-const net = require('net');
-const crypto = require('crypto');
+require("node:perf_hooks")
 const babel = require("@babel/core");
 const traverse = require("@babel/traverse").default;
 const parser = require("@babel/parser");

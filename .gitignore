@@ -5,3 +5,5 @@ log-app.txt
 coverage
 junit.xml
 .vscode/launch.json
+dist
+node

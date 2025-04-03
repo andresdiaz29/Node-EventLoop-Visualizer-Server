@@ -9,6 +9,7 @@ const { Transform } = require("node:stream");
 // Heroku provides a PORT env var that we have to use
 const port = process.env.PORT || 8090;
 const wss = new WebSocket.Server({ port });
+const nodePath = process.env.NODE_PATH || `${path.join(__dirname, "../../node")}/node.exe`;
 // console.log("Running server on port:", port);
 
 const Messages = {
@@ -25,7 +26,7 @@ wss.on("connection", (ws) => {
       let isFinished = false;
 
       const activeChildProcess = spawn(
-        "C:\\Users\\andreseduardo.diaz\\Documents\\Andres\\NodeJs\\node\\out\\Release\\node.exe",
+        nodePath,
         [
           path.join(__dirname, "../worker", "worker.js"),
           JSON.stringify(payload),
@@ -42,7 +43,7 @@ wss.on("connection", (ws) => {
           const lines = chunk.toString().split("\n");
 
           lines?.filter((line) => !!line).forEach((line) => {
-            // console.log(line);
+            console.log(line);
             const regexType =
               /^\[(event|ticksAndRejections|event_loop)\]\s*((?:\w+\s*:\s*(?:"[^"]*"|'[^']*'|\d+)(?:,\s*)?)+)/;
             const typeMatch = line.match(regexType);
@@ -128,7 +129,7 @@ wss.on("connection", (ws) => {
           type: 'ExitFunction'
         });
 
-        console.log(reducedEvents.map(JSON.stringify));
+        // console.log(reducedEvents.map(JSON.stringify));
         ws.send(JSON.stringify(reducedEvents));
       });
 
